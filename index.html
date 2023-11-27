@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+ <form onsubmit="saveToLocalStorage(event)">
+    <label>Name</label>
+    <input type="text" name="username" required>
+    <label>Email</label>
+    <input type="text" name="email" required>
+    <label>PhNumber</label>
+    <input type="tel" name="phno">
+    <button>Submit</button>
+    
+    </form>  
+    <ul id="listOfUSer"></ul>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.6.2/axios.min.js"></script>
+     <script>
+
+         function saveToLocalStorage(event){
+             event.preventDefault();
+            const username =event.target.username.value;
+             const  email=event.target.email.value;
+             const phno =event.target.phno.value;
+            // localStorage.setItem('name',name);
+             //localStorage.setItem('email',email);
+             //localStorage.setItem('phno',phno);
+            const obj = {
+                username,
+               email,
+               phno
+            };
+            axios.post("https://crudcrud.com/api/cba0235db1b945be84103fb19f4a6916/appoinmentData",obj)
+            .then((response)=>{
+                shoowNewUserOnScreen(response.data)
+                console.log(response);
+            })
+            .catch((err)=>{
+                document.body.innerHTML = document.body.innerHTML + "<h4> something went wrong</h4>"
+                console.log(err)
+         })
+            
+            //localStorage.setItem('userdetail',JSON.stringify(obj));
+            //shoowNewUserOnScreen(obj)
+        }
+            window.addEventListener("DOMContentLoaded", () => {
+             const localStorageObj =localStorage;
+             const localStorageKeys = Object.keys(localStorageObj)
+            
+
+             for(var i=0;i<localStorageKeys.length;i++){
+                //  const key =localStorage[i]
+                //  const userdetailString = localStorageObj[key];
+                //  const userdetailObj = JSON.parse(userdetailString);
+             shoowNewUserOnScreen(response.data[i])          
+         }
+        })
+
+    .catch((error)=>{
+        console.log(error)
+    })
+
+    function shoowNewUserOnScreen(user){
+         document.getElementById('email').value='';
+        document.getElementById('username').value='';
+        document.getElementById('phno').value='';
+        if(localStorage.getItem(user.email) !== null){
+
+            removeUserFromScreen(user.email)
+        }
+        const parantNode=document.getElementById('listOfUser');
+        const childHTML=`<li id=${user._id}> ${user.name}-${user.email}
+                        <button onclick=deleteUser(${'user._id'})>Delete User detail</button>
+                        <button onclick=editUserDetails('${user.email}','${iser.name}','${iser.email}','${iser.phno}',${user._id})></button>
+            </li>`
+            
+            parantNode.innerHTML=parantNode.innerHTML + childHTML;
+        }
+
+        //user edit
+        function  userEditDetail(emailId,name,phno,userId){
+            document.getElementById('email').value=emailId;
+            document.getElementById('username').value=name;
+            document.getElementById('phno').value=phno;
+            deleteUser(userId)
+        }
+    
+        function deleteUser(userId){
+          axios.delete(`https://crudcrud.com/api/ce3b6bb89a29400e90f2afe5005883f5/appointmentData/${userId}`)
+          .then((response)=>{
+            removeUserFromScreen(userId)
+          })
+          .catch((err)=>{
+            console.log(err)
+          })
+           // console.log(emailId)
+            //localStorage.removeItem(emailId);
+            //removeUserFromScreen(emailId);
+        }
+        function removeUserFromScreen(userId){
+            const parantNode=document.getElementById('listOfUsers');
+            const childNodeToBeDeleted=document.getElementById(userId);
+            if(childNodeToBeDeleted){
+                parantNode.removeChild(childNodeToBeDeleted)
+            }
+        }
